@@ -21,5 +21,13 @@ const app = new Hono().
 
         return c.json({data})
     })
+    .post("/", clerkMiddleware(), async (c) => {
+        const auth = getAuth(c);
+        if (!auth?.userId) {
+            throw new HTTPException(401, {res: c.json({error: "unauthorized"}, 401)})
+        }
+
+        return c.json({})
+    })
 
 export default app;
