@@ -1,20 +1,20 @@
+import { useNewAccount } from "@/features/accounts/hooks/use-new-account";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
-import React from 'react'
-
 export const NewAccountSheet = () => {
-  return (
-    <Sheet open>
-        <SheetContent className="space-y-4">
-            <SheetHeader>
-                <SheetTitle>
-                    New Account
-                    <SheetDescription>
-                        Create a new account to track your transactions.
-                    </SheetDescription>
-                </SheetTitle>
-            </SheetHeader>
-        </SheetContent>
-    </Sheet>
-  )
+    const { isOpen, onClose } = useNewAccount();
+    return (
+        <Sheet open={isOpen} onOpenChange={onClose}>
+            <SheetContent className="space-y-4">
+                <SheetHeader>
+                    <SheetTitle>
+                        New Account
+                        <SheetDescription>
+                            Create a new account to track your transactions.
+                        </SheetDescription>
+                    </SheetTitle>
+                </SheetHeader>
+            </SheetContent>
+        </Sheet>
+    )
 }
