@@ -5,6 +5,7 @@ import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { HTTPException } from "hono/http-exception";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
+import { createId } from "@paralleldrive/cuid2";
 
 const app = new Hono().
     get("/", clerkMiddleware(), 
@@ -32,13 +33,13 @@ const app = new Hono().
                 throw new HTTPException(401, {res: c.json({error: "unauthorized"}, 401)})
             }
 
-            const data = await db.insert(accounts).values({
-                id: "test",
+            const [data] = await db.insert(accounts).values({
+                id: createId(),
                 userId: auth.userId,
                 ...values,
-            })
+            }).returning();
 
-            return c.json({})
+            return c.json({ data });
     })
 
 export default app;
