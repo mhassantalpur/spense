@@ -7,6 +7,7 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs'
+import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
@@ -41,6 +42,7 @@ export default function RootLayout({
         >
           <QueryProvider>
             <SheetProvider />
+            <Toaster />
             {children}
           </QueryProvider>
         </body>
