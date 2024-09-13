@@ -33,12 +33,14 @@ export const AccountForm =({
     });
 
     const handleSubmit = (values: FormValues) => {
-        console.log({values})
+        onSubmit(values);
     };
 
     const handleDelete = () => {
         onDelete?.()
     };
+
+
 
 
     return (
@@ -60,7 +62,15 @@ export const AccountForm =({
                                 />
                             </FormControl>
                         </FormItem>
-                    )}/>
+                    )}
+                />
+                <Button className="w-full" disabled={disabled}>
+                    {id ? "Save changes":"Create account"}
+                </Button>
+                {!!id && <Button type="button" disabled={disabled} onClick={handleDelete} className="w-full text-black" variant="outline">
+                    <Trash className="text-black size-4 mr-2" />
+                    Delete account
+                </Button>}
             </form>
         </Form>
     )
