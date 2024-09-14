@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useNewAccount } from "@/features/accounts/hooks/use-new-account"
 import { Plus } from "lucide-react"
 
-import { Payment, columns } from "./columns"
+import { Payment, columns } from "@/app/(dashboard)/accounts/columns"
 import { DataTable } from "@/components/data-table";
 
 const data: Payment[] = [
@@ -15,7 +15,12 @@ const data: Payment[] = [
       status: "pending",
       email: "m@example.com",
     },
-    // ...
+    {
+        id: "728ed52f",
+        amount: 50,
+        status: "success",
+        email: "a@example.com",
+      },
   ]
 
 const AccountsPage = () => {
@@ -33,7 +38,7 @@ const AccountsPage = () => {
                     </Button>
                 </CardHeader>
                 <CardContent>
-                    <DataTable columns={columns} data={data} />
+                    <DataTable columns={columns} data={data} filterKey="email"/>
                 </CardContent>
             </Card>
         </div>
