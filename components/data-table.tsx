@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
               size='sm' variant='outline' 
               className='ml-auto font-normal text-xs'
               onClick={() => {
-                onDelete(table.getFilteredRowModel().rows)
+                onDelete(table.getFilteredSelectedRowModel().rows)
                 table.resetRowSelection()
               }}
             >

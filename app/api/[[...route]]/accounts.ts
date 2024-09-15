@@ -50,10 +50,10 @@ const app = new Hono().
             const values = c.req.valid('json');
 
             if (!auth?.userId) {
-                throw new HTTPException(401, {res: c.json({error: "unauthorized"}, 401)})
+                return c.json({error: "Unauthorizeds"}, 401)
             }
 
-            const [data] = await db
+            const data = await db
                 .delete(accounts)
                 .where(
                     and(
