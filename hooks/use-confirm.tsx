@@ -47,12 +47,13 @@ import {
                 <DialogFooter className="pt-2">
                     <Button
                         onClick={handleCancel}
-                        variant='outline'
+                        variant="outline"
                     >
                         Cancel
                     </Button>
                     <Button
                         onClick={handleConfirm}
+                        variant="destructive"
                     >
                         Confirm
                     </Button>
