@@ -75,7 +75,15 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
-            <Button disabled={disabled} size='sm' variant='outline' className='ml-auto font-normal text-xs'>
+            <Button 
+              disabled={disabled} 
+              size='sm' variant='outline' 
+              className='ml-auto font-normal text-xs'
+              onClick={() => {
+                onDelete(table.getFilteredRowModel().rows)
+                table.resetRowSelection()
+              }}
+            >
                 <Trash className='size-4 mr-2'/>
                 Delete({table.getFilteredSelectedRowModel().rows.length})
             </Button>
@@ -131,18 +139,18 @@ export function DataTable<TData, TValue>({
                 {table.getFilteredRowModel().rows.length} row(s) selected.
             </div>
             <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
             >
             Previous
             </Button>
             <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
             >
             Next
             </Button>
