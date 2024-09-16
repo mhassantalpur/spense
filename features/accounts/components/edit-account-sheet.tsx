@@ -36,9 +36,9 @@ export const EditAccountSheet = () => {
             <SheetContent className="space-y-4">
                 <SheetHeader className="text-black">
                     <SheetTitle>
-                        New Account
+                        Edit Account
                         <SheetDescription>
-                            Create a new account to track your transactions.
+                            Edit your existing account
                         </SheetDescription>
                     </SheetTitle>
                 </SheetHeader>
@@ -49,7 +49,8 @@ export const EditAccountSheet = () => {
                         </div>
                       )
                     :
-                    (<AccountForm 
+                    (<AccountForm
+                        id = {id} 
                         onSubmit={onSubmit} 
                         disabled={mutation.isPending}
                         defaultValues={defaultValues}
