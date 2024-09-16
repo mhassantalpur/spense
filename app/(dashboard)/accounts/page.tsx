@@ -23,7 +23,7 @@ const AccountsPage = () => {
 
     if (accountsQuery.isLoading) {
         return (
-            <div className="max-w-screen-4xl mx-auto w-full pb-10 -mt-24">
+            <div className="max-w-screen-4xl mx-auto w-full pb-10">
                 <Card className="border-none drop-shadow-sm">
                     <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                         <Skeleton className="h-8 w-48" />
@@ -39,7 +39,7 @@ const AccountsPage = () => {
     }
 
     return (
-        <div className="max-w-screen-4xl mx-auto w-full pb-10 -mt-24">
+        <div className="max-w-screen-4xl mx-auto w-full pb-10">
             <Card className="border-none drop-shadow-sm">
                 <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                     <CardTitle className="text-xl line-clamp-1">

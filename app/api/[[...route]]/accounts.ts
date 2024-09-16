@@ -8,8 +8,8 @@ import { zValidator } from "@hono/zod-validator";
 import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
 
-const app = new Hono().
-    get("/", clerkMiddleware(), 
+const app = new Hono()
+    .get("/", clerkMiddleware(), 
         async (c) => {
             const auth = getAuth(c);
             if (!auth?.userId) {
@@ -24,6 +24,39 @@ const app = new Hono().
                 .where(eq(accounts.userId, auth.userId));
 
             return c.json({data})
+        }
+    )
+    .get('/:id', clerkMiddleware(), zValidator('param', z.object({id: z.string().optional()})),
+        async (c) => {
+            const auth = getAuth(c);
+            const {id} = c.req.valid('param');
+
+            if (!id) {
+                throw new HTTPException(400, {res: c.json({error: "missing id"}, 400)})
+            }
+
+            if (!auth?.userId) {
+                throw new HTTPException(401, {res: c.json({error: "unauthorized"}, 401)})
+            }
+
+            const [data] = await db
+                .select({
+                    id: accounts.id,
+                    name: accounts.name
+                })
+                .from(accounts)
+                .where(
+                    and(
+                        eq(accounts.userId, auth.userId),
+                        eq(accounts.id, id)
+                    )
+                );
+
+            if (!data) {
+                throw new HTTPException(404, {res: c.json({error: "Not found"}, 404)})
+            }
+
+            return c.json({data});
         }
     )
     .post("/", clerkMiddleware(), zValidator('json', insertAccountSchema.pick({name:true})), 
@@ -50,7 +83,7 @@ const app = new Hono().
             const values = c.req.valid('json');
 
             if (!auth?.userId) {
-                return c.json({error: "Unauthorizeds"}, 401)
+                throw new HTTPException(401, {res: c.json({error: "unauthorized"}, 401)})
             }
 
             const data = await db
