@@ -7,6 +7,7 @@ import { useGetAccount } from "../api/use-get-account";
 import { useEditAccount } from "../api/use-edit-account";
 import { useDeleteAccount } from "../api/use-delete-account";
 import { Loader2 } from "lucide-react";
+import { useConfirm } from "@/hooks/use-confirm";
 
 const formSchema = insertAccountSchema.pick({name: true});
 
@@ -14,6 +15,11 @@ type FormValues = z.input<typeof formSchema>;
 
 export const EditAccountSheet = () => {
     const { isOpen, onClose, id } = useOpenAccount();
+
+    const [ConfirmDialog, confirm] = useConfirm(
+        "Are you sure?",
+        "You are about to delete this transaction"
+    )
 
     const accountQuery = useGetAccount(id);
     const editMutation = useEditAccount(id);
@@ -28,6 +34,18 @@ export const EditAccountSheet = () => {
         });
     }
 
+    const onDelete = async () => {
+        const ok = await confirm();
+
+        if (ok) {
+            deleteMutation.mutate(undefined, {
+                onSuccess: () => {
+                    onClose();
+                }
+            })
+        }
+    }
+
     const defaultValues = accountQuery.data ? {
         name: accountQuery.data.name
     } : {
@@ -35,32 +53,35 @@ export const EditAccountSheet = () => {
     }
 
     return (
-        <Sheet open={isOpen} onOpenChange={onClose}>
-            <SheetContent className="space-y-4">
-                <SheetHeader className="text-black">
-                    <SheetTitle>
-                        Edit Account
-                        <SheetDescription>
-                            Edit your existing account
-                        </SheetDescription>
-                    </SheetTitle>
-                </SheetHeader>
-                {isLoading
-                    ? (
-                        <div className="absolute inset-0 flex items-center">
-                            <Loader2 className="size-4 text-muted-foreground animate-spin"/>
-                        </div>
-                      )
-                    :
-                    (<AccountForm
-                        id = {id} 
-                        onSubmit={onSubmit} 
-                        disabled={isPending}
-                        defaultValues={defaultValues}
-                        onDelete={() => deleteMutation.mutate()}
-                    />)
-                }
-            </SheetContent>
-        </Sheet>
+        <>
+            <ConfirmDialog />
+            <Sheet open={isOpen} onOpenChange={onClose}>
+                <SheetContent className="space-y-4">
+                    <SheetHeader className="text-black">
+                        <SheetTitle>
+                            Edit Account
+                            <SheetDescription>
+                                Edit your existing account
+                            </SheetDescription>
+                        </SheetTitle>
+                    </SheetHeader>
+                    {isLoading
+                        ? (
+                            <div className="absolute inset-0 flex items-center">
+                                <Loader2 className="size-4 text-muted-foreground animate-spin"/>
+                            </div>
+                        )
+                        :
+                        (<AccountForm
+                            id = {id} 
+                            onSubmit={onSubmit} 
+                            disabled={isPending}
+                            defaultValues={defaultValues}
+                            onDelete={onDelete}
+                        />)
+                    }
+                </SheetContent>
+            </Sheet>
+        </>
     )
 }
