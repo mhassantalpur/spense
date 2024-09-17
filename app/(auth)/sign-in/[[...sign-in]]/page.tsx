@@ -24,7 +24,7 @@ const SignInPage = () => {
           </ClerkLoading>
         </div>
       </div>
-      <div className='h-full bg-[#E49E7B] hidden lg:flex items-center justify-center'>
+      <div className='h-full bg-[#144a63] hidden lg:flex items-center justify-center'>
           <Image src="/logo.png" height={500} width={500} alt='Logo' />
         </div>
     </div>
