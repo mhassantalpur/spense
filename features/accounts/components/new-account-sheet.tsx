@@ -26,7 +26,7 @@ export const NewAccountSheet = () => {
                     <SheetTitle>
                         New Account
                         <SheetDescription>
-                            Create a new account to track your transactions.
+                            Create a new account to track your transactions
                         </SheetDescription>
                     </SheetTitle>
                 </SheetHeader>
