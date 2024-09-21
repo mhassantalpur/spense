@@ -163,7 +163,7 @@ const app = new Hono()
                 throw new HTTPException(400, {res: c.json({error: "missing id"}, 400)})
             }
 
-            const transactionsToUpdate = db.$with("transactions_to_delete")
+            const transactionsToUpdate = db.$with("transactions_to_update")
             .as(
                 db.select({id: transactions.id})
                 .from(transactions)
@@ -203,15 +203,25 @@ const app = new Hono()
                 throw new HTTPException(400, {res: c.json({error: "missing id"}, 400)})
             }
 
+            const transactionsToDelete = db.$with("transactions_to_delete")
+            .as(
+                db.select({id: transactions.id})
+                .from(transactions)
+                .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+                .where(and(
+                    eq(transactions.id, id),
+                    eq(accounts.userId, auth.userId)
+                ))
+            )
+
+
             const [data] = await db
-                .delete(categories)
+                .with(transactionsToDelete)
+                .delete(transactions)
                 .where(
-                    and(
-                        eq(categories.userId, auth.userId),
-                        eq(categories.id, id)
-                    )
+                    inArray(transactions.id, sql`(select id from ${transactionsToDelete})`)
                 )
-                .returning({ id: categories.id });
+                .returning({ id: transactions.id });
 
             if (!data) {
                 return c.json({error: "Not found"}, 404)
