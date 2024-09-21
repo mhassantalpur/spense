@@ -129,37 +129,6 @@ const app = new Hono()
             return c.json({data})
         }
     )
-    .patch('/:id', clerkMiddleware(), zValidator('param', z.object({id: z.string().optional()})), zValidator('json', insertCategorySchema.pick({name:true})),
-        async (c) => {
-            const auth = getAuth(c);
-            const { id } = c.req.valid('param');
-            const values = c.req.valid('json');
-
-            if (!auth?.userId) {
-                throw new HTTPException(401, {res: c.json({error: "unauthorized"}, 401)})
-            }
-            
-            if (!id) {
-                throw new HTTPException(400, {res: c.json({error: "missing id"}, 400)})
-            }
-
-            const [data] = await db
-                .update(categories)
-                .set(values)
-                .where(
-                    and(
-                        eq(categories.userId, auth.userId),
-                        eq(categories.id, id)
-                    )
-                )
-                .returning();
-            if (!data) {
-                return c.json({error: "Not found"}, 404)
-            }
-
-            return c.json({data})
-        }
-    )
     .delete('/:id', clerkMiddleware(), zValidator('param', z.object({id: z.string().optional()})),
         async (c) => {
             const auth = getAuth(c);
