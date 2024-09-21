@@ -15,6 +15,13 @@
       "when": 1726693934742,
       "tag": "0001_outstanding_scrambler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1726947333677,
+      "tag": "0002_jazzy_lord_hawal",
+      "breakpoints": true
     }
   ]
 }
