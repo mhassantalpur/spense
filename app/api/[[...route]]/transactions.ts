@@ -3,7 +3,7 @@ import { db } from "@/db/drizzle";
 import { transactions, insertTransactionSchema, categories, accounts } from "@/db/schema";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { HTTPException } from "hono/http-exception";
-import { and, desc, eq, gte, inArray, lte } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
@@ -126,15 +126,26 @@ const app = new Hono()
                 throw new HTTPException(401, {res: c.json({error: "unauthorized"}, 401)})
             }
 
-            const data = await db
-                .delete(categories)
-                .where(
-                    and(
-                        eq(categories.userId, auth.userId),
-                        inArray(categories.id, values.ids)
-                    )
+            // query list of ids that joins all accounts with authenticated userId
+            const transactionsToDelete = db.$with("transactions_to_delete")
+                .as(
+                    db.select({id: transactions.id})
+                    .from(transactions)
+                    .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+                    .where(and(
+                        inArray(transactions.id, values.ids),
+                        eq(accounts.userId, auth.userId)
+                    ))
                 )
-                .returning({id: categories.id})
+
+            const data = await db
+                .with(transactionsToDelete)
+                .delete(transactions)
+                .where(
+                    inArray(transactions.id, sql`(select id from ${transactionsToDelete})`)
+                )
+                .returning({ id: transactions.id })
+
             return c.json({data}) 
         },
     )
