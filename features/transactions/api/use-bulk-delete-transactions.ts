@@ -4,10 +4,10 @@ import { toast } from "sonner";
 
 import { client } from "@/lib/hono";
 
-type ResponseType = InferResponseType<typeof client.api.accounts["bulk-delete"]["$post"]>;
-type RequestType = InferRequestType<typeof client.api.accounts["bulk-delete"]["$post"]>["json"];
+type ResponseType = InferResponseType<typeof client.api.transactions["bulk-delete"]["$post"]>;
+type RequestType = InferRequestType<typeof client.api.transactions["bulk-delete"]["$post"]>["json"];
 
-export const useBulkDeleteAccounts = () => {
+export const useBulkDeleteTransactions = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation<
         ResponseType,
@@ -15,15 +15,15 @@ export const useBulkDeleteAccounts = () => {
         RequestType
     >({
         mutationFn: async (json) => {
-            const response = await client.api.accounts['bulk-delete']['$post']({ json });
+            const response = await client.api.transactions['bulk-delete']['$post']({ json });
             return await response.json();
         },
         onSuccess: ()  => {
-            toast.success("Accounts deleted");
-            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            toast.success("Transactions deleted");
+            queryClient.invalidateQueries({ queryKey: ['transactions'] });
         },
         onError: () => {
-            toast.error("Failed to delete accounts")
+            toast.error("Failed to delete transactions")
         }
     })
 
