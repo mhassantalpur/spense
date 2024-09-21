@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { db } from "@/db/drizzle";
-import { transactions, insertTransactionSchema } from "@/db/schema";
+import { transactions, insertTransactionSchema, categories, accounts } from "@/db/schema";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { HTTPException } from "hono/http-exception";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lte } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
@@ -33,11 +33,30 @@ const app = new Hono()
 
             const data = await db
                 .select({
-                    id: categories.id,
-                    name: categories.name 
+                    id: transactions.id,
+                    date: transactions.date,
+                    category: categories.name,
+                    categoryId: transactions.categoryId,
+                    payee: transactions.payee,
+                    amount: transactions.amount,
+                    notes: transactions.notes,
+                    account: accounts.name,
+                    accountId: transactions.accountId
                 })
-                .from(categories)
-                .where(eq(categories.userId, auth.userId));
+                .from(transactions)
+                // innerJoin for relation on both sides - dont load transactions that dont have the matching account id
+                .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+                // leftJoin - in case a category does not exist, still load the transaction without category with categories set to null
+                .leftJoin(categories, eq(transactions.categoryId, categories.id))
+                .where(
+                    and(
+                        accountId ? eq(transactions.accountId, accountId) : undefined,
+                        eq(accounts.userId, auth.userId),
+                        gte(transactions.date, startDate),
+                        lte(transactions.date, endDate)
+                    )
+                )
+                .orderBy(desc(transactions.date))
 
             return c.json({data})
         }
