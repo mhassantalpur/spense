@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/date-picker";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import { AmountInput } from "@/components/amount-input";
 
 import { insertTransactionSchema } from "@/db/schema";
 import { Textarea } from "@/components/ui/textarea";
@@ -137,6 +138,24 @@ export const TransactionForm =({
                                     disabled={disabled}
                                     placeholder="Add a payee"
                                     {...field} 
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+                <FormField 
+                    name="payee" 
+                    control={form.control} 
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel className="text-black">
+                                Amount
+                            </FormLabel>
+                            <FormControl>
+                                <AmountInput
+                                    {...field} 
+                                    disabled={disabled}
+                                    placeholder="0.00"
                                 />
                             </FormControl>
                         </FormItem>
