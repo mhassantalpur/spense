@@ -52,10 +52,10 @@ const TransactionsPage = () => {
                 </CardHeader>
                 <CardContent>
                     <DataTable
+                        filterKey="payee"
                         disabled={isDisabled} 
                         columns={columns} 
                         data={transactions} 
-                        filterKey="name"
                         onDelete={(row) => {
                             const ids = row.map((r) => r.original.id)
                             deleteTransactions.mutate({ids})

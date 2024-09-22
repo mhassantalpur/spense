@@ -19,26 +19,36 @@ export const DatePicker = ({
     onChange,
     disabled
 }: Props) => {
-  return (
-    <Popover>
-        <PopoverTrigger asChild>
-            <Button 
-                disabled={disabled}
-                variant='outline'
-                className={cn('w-full justify-start text-left font-normal', !value && 'text-muted-foreground')}
-            >
-                <CalendarIcon className='size-4 mr-2'/>
-                {value ? format(value, "PPP") : <span>Pick a date</span>}
-            </Button>
-        </PopoverTrigger>
-        <PopoverContent>
-            <Calendar
-                mode='single'
-                selected={value}
-                onSelect={onChange}
-                disabled={disabled} 
-            />
-        </PopoverContent>
-    </Popover>
-  )
-}
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    const handleDateSelect: SelectSingleEventHandler = (selected, selectedDay, modifiers, event) => {
+        if (onChange) {
+            onChange(selected, selectedDay, modifiers, event);
+        }
+        setIsOpen(false); // Close the popover when a date is selected
+    };
+
+    return (
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+            <PopoverTrigger asChild>
+                <Button 
+                    disabled={disabled}
+                    variant='outline'
+                    className={cn('w-full justify-start text-left font-normal', !value && 'text-muted-foreground')}
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                    <CalendarIcon className='size-4 mr-2'/>
+                    {value ? format(value, "PPP") : <span>Pick a date</span>}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+                <Calendar
+                    mode='single'
+                    selected={value}
+                    onSelect={handleDateSelect}
+                    disabled={disabled} 
+                />
+            </PopoverContent>
+        </Popover>
+    );
+};
