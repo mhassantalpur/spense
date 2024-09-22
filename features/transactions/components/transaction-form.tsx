@@ -123,6 +123,24 @@ export const TransactionForm =({
                         </FormItem>
                     )}
                 />
+                 <FormField 
+                    name="payee" 
+                    control={form.control} 
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel className="text-black">
+                                Payee
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                    disabled={disabled}
+                                    placeholder="Add a payee"
+                                    {...field} 
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
                 <Button className="w-full" disabled={disabled}>
                     {id ? "Save changes":"Create account"}
                 </Button>
