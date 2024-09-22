@@ -9,6 +9,7 @@ import { DatePicker } from "@/components/date-picker";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 
 import { insertTransactionSchema } from "@/db/schema";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
     date: z.coerce.date(),
@@ -66,7 +67,7 @@ export const TransactionForm =({
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
-            <FormField 
+                <FormField 
                     name="date" 
                     control={form.control} 
                     render={({field}) => (
@@ -123,7 +124,7 @@ export const TransactionForm =({
                         </FormItem>
                     )}
                 />
-                 <FormField 
+                <FormField 
                     name="payee" 
                     control={form.control} 
                     render={({field}) => (
@@ -136,6 +137,25 @@ export const TransactionForm =({
                                     disabled={disabled}
                                     placeholder="Add a payee"
                                     {...field} 
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+                <FormField 
+                    name="notes" 
+                    control={form.control} 
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel className="text-black">
+                                Notes
+                            </FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    disabled={disabled}
+                                    placeholder="Optional Notes" 
                                 />
                             </FormControl>
                         </FormItem>
