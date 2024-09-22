@@ -144,7 +144,7 @@ export const TransactionForm =({
                     )}
                 />
                 <FormField 
-                    name="payee" 
+                    name="amount" 
                     control={form.control} 
                     render={({field}) => (
                         <FormItem>
