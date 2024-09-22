@@ -2,10 +2,11 @@ import { z } from "zod";
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { Select } from "@/components/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+
 import { insertTransactionSchema } from "@/db/schema";
 
 const formSchema = z.object({
@@ -51,7 +52,7 @@ export const TransactionForm =({
     });
 
     const handleSubmit = (values: FormValues) => {
-        onSubmit(values);
+        console.log({ values })
     };
 
     const handleDelete = () => {
@@ -65,18 +66,42 @@ export const TransactionForm =({
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
                 <FormField 
-                    name="name" 
+                    name="accountId" 
                     control={form.control} 
                     render={({field}) => (
                         <FormItem>
                             <FormLabel className="text-black">
-                                Name
+                                Account
                             </FormLabel>
                             <FormControl>
-                                <Input
+                                <Select
+                                    placeholder="Select an account"
+                                    options={accountOptions}
+                                    onCreate={onCreateAccount}
+                                    value={field.value}
+                                    onChange={field.onChange}
                                     disabled={disabled}
-                                    placeholder="e.g. Cash, Bank, Credit Card"
-                                    {...field} 
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+                <FormField 
+                    name="categoryId" 
+                    control={form.control} 
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel className="text-black">
+                                Category
+                            </FormLabel>
+                            <FormControl>
+                                <Select
+                                    placeholder="Select a category"
+                                    options={categoryOptions}
+                                    onCreate={onCreateCategory}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    disabled={disabled}
                                 />
                             </FormControl>
                         </FormItem>
