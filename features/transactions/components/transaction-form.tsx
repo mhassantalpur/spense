@@ -20,7 +20,7 @@ type Props = {
     disabled?: boolean;
 };
 
-export const AccountForm =({
+export const TransactionForm =({
     id,
     defaultValues,
     onSubmit,
