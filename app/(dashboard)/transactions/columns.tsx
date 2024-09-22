@@ -7,8 +7,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { InferResponseType } from "hono"
 import { client } from "@/lib/hono"
 import { Actions } from "./actions"
+import { format } from "date-fns"
 
-export type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>["data"][0]
+export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>["data"][0]
 
 export const columns: ColumnDef<ResponseType>[] = [
   {
@@ -32,18 +33,85 @@ export const columns: ColumnDef<ResponseType>[] = [
     ),
   },
   {
-    accessorKey: "name",
+    accessorKey: "date",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
+    cell: ({ row }) => {
+      const date = row.getValue("date") as Date;
+
+      return (
+        <span>
+          {format(date, "dd MMMM, yyyy")}
+        </span>
+      )
+    }
+  },
+  {
+    accessorKey: "category",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Category
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      return (
+        <span>
+          {row.original.category}
+        </span>
+      )
+    }
+  },
+  {
+    accessorKey: "payee",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Payee
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: "amount",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Amount
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+
+      return (
+        <span>
+          {formatCurrency}
+        </span>
+      )
+    }
   },
   {
     id: 'actions',
