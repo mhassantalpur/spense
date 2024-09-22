@@ -5,19 +5,33 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { insertAccountSchema } from "@/db/schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import { insertTransactionSchema } from "@/db/schema";
 
-const formSchema = insertAccountSchema.pick({name: true});
+const formSchema = z.object({
+    date: z.coerce.date(),
+    accountId: z.string(),
+    categoryId: z.string().nullable().optional(),
+    payee: z.string(),
+    amount: z.string(),
+    notes: z.string().nullable().optional()
+});
+
+const apiSchema = insertTransactionSchema.omit({id: true});
 
 type FormValues = z.input<typeof formSchema>;
+type apiFormValues = z.input<typeof apiSchema>;
 
 type Props = {
     id?: string;
     defaultValues?: FormValues;
-    onSubmit: (values: FormValues) => void;
+    onSubmit: (values: apiFormValues) => void;
     onDelete?: () => void;
     disabled?: boolean;
+    accountOptions: {label: string; value: string}[];
+    categoryOptions: {label: string; value: string}[];
+    onCreateAccount: (name: string) => void;
+    onCreateCategory: (name: string) => void;
 };
 
 export const TransactionForm =({
@@ -25,7 +39,11 @@ export const TransactionForm =({
     defaultValues,
     onSubmit,
     onDelete,
-    disabled
+    disabled,
+    accountOptions,
+    categoryOptions,
+    onCreateAccount,
+    onCreateCategory
 }: Props) => {
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),

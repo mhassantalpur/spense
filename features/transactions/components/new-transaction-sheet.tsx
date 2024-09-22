@@ -73,9 +73,6 @@ export const NewTransactionSheet = () => {
                             onCreateCategory={onCreateCategory}
                             accountOptions={accountOptions}
                             onCreateAccount={onCreateAccount}
-                            defaultValues={{
-                                name: ""
-                            }}
                         />
                     )
                 }
