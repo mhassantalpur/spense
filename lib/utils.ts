@@ -6,12 +6,12 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // convert amount from db for client side
-export function converAmountFromMiliunits(amount: number) {
+export function convertAmountFromMiliunits(amount: number) {
   return amount / 1000;
 }
 
 // create amount to store integer value in db
-export function converAmountToMiliunits(amount: number) {
+export function convertAmountToMiliunits(amount: number) {
   return Math.round(amount * 1000);
 }
 
