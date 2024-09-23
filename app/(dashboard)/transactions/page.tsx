@@ -13,6 +13,7 @@ import { columns } from "@/app/(dashboard)/transactions/columns"
 import { DataTable } from "@/components/data-table";
 import { Skeleton } from "@/components/ui/skeleton"
 import { UploadButton } from "./upload-button"
+import { ImportCard } from "./import-card"
 
 enum VARIANTS {
     LIST = "LIST",
@@ -27,6 +28,17 @@ const INITIAL_IMPORT_RESULSTS = {
 
 const TransactionsPage = () => {
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+    const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULSTS);
+
+    const onUpload = (results: typeof INITIAL_IMPORT_RESULSTS) => {
+        setImportResults(results);
+        setVariant(VARIANTS.IMPORT);
+    }
+
+    const onCancelImport = () => {
+        setImportResults(INITIAL_IMPORT_RESULSTS);
+        setVariant(VARIANTS.LIST);
+    }  
 
     const newTransaction = useNewTransaction();
     const deleteTransactions = useBulkDeleteTransactions();
@@ -57,8 +69,12 @@ const TransactionsPage = () => {
     if (variant === VARIANTS.IMPORT) {
         return (
             <>
-                <div>
-                    This is a screen for import
+                <div className="text-black">
+                    <ImportCard
+                        data={importResults.data}
+                        onCancel={onCancelImport}
+                        onSubmit={() => {}} 
+                    />
                 </div>
             </>
         )
@@ -77,7 +93,7 @@ const TransactionsPage = () => {
                             Add new
                         </Button>
                         <UploadButton
-                            onUpload={() => {}}
+                            onUpload={onUpload}
                         />
                     </div>
                 </CardHeader>

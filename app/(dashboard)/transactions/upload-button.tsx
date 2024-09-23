@@ -13,7 +13,7 @@ export const UploadButton = ({
     const { CSVReader } = useCSVReader();
 
     return (
-        <CSVReader>
+        <CSVReader onUploadAccepted={onUpload}>
             {({ getRootProps }: any) => (
                 <Button
                     size='sm'
