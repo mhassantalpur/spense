@@ -32,6 +32,37 @@ export const ImportCard = ({
     const headers = data[0]; // header to extract the title data from csv in first element
     const body = data.slice(1); // slice rest to get the finance data
 
+    const onTableHeadSelectChange = (
+        columnIndex: number,
+        value: string | null
+    ) => {
+        setSelectedColumns((prev) => {
+            const newSelectedColumns = {...prev};
+
+            for (const key in newSelectedColumns) {
+                if (newSelectedColumns[key] === value) {
+                    newSelectedColumns[key] = null;
+                }
+            }
+
+            if (value === 'skip') {
+                value === null;
+            }
+
+            newSelectedColumns[`column_${columnIndex}`] = value;
+
+            return newSelectedColumns;
+        })
+    }
+
+    const progress = Object.values(selectedColumns).filter(Boolean).length; // filter user's selected columns for required selections
+
+    const handleContinue = () => {
+        const getColumnIndex = (column: string) => {
+            column.split("_")[1]; // same as `column_${columnIndex}`
+        }
+    }
+
     return (
         <div className="max-w-screen-4xl mx-auto w-full pb-10">
             <Card className="border-none drop-shadow-sm">
@@ -39,9 +70,21 @@ export const ImportCard = ({
                     <CardTitle className="text-xl line-clamp-1">
                         Import Transaction
                     </CardTitle>
-                    <div className="flex items-center gap-x-2">
-                        <Button onClick={onCancel} size="sm">
+                    <div className="flex flex-col lg:flex-row gap-y-2 items-center gap-x-2">
+                        <Button 
+                            onClick={onCancel} 
+                            size="sm" 
+                            className="w-full lg:auto"
+                        >
                             Cancel
+                        </Button>
+                        <Button
+                            size='sm'
+                            disabled={progress < requiredOptions.length}
+                            className="w-full lg:auto"
+                            onClick={() => {}}
+                        >
+                            Continue ({progress} / {requiredOptions.length})
                         </Button>
                     </div>
                 </CardHeader>
@@ -50,7 +93,7 @@ export const ImportCard = ({
                         headers={headers}
                         body = {body}
                         selectedColumns = {selectedColumns}
-                        onTableHeadSelectChange={() => {}}
+                        onTableHeadSelectChange={onTableHeadSelectChange}
                     />
                 </CardContent>
             </Card>
