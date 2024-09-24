@@ -24,9 +24,9 @@ const app = new Hono()
                 throw new HTTPException(401, {res: c.json({error: "unauthorized"}, 401)})
             }
 
-            // if nothing is filtered - default by the last 30 days for data
+            // if nothing is filtered - default by the last 360 days for data
             const defaultTo = new Date();
-            const defaultFrom = subDays(defaultTo, 30);
+            const defaultFrom = subDays(defaultTo, 360);
 
             const startDate = from ? parse(from, "yyyy-MM-dd", new Date()) : defaultFrom;
             const endDate = to ? parse(to, "yyyy-MM-dd", new Date()) : defaultTo;
