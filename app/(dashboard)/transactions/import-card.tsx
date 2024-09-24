@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ImportTable } from "./import-table";
+import { convertAmountToMiliunits } from "@/lib/utils";
+import {format, parse} from 'date-fns';
 
 const dateFormat = "yyyy-MM-dd HH:mm:ss";
 const outputFormat = "yyyy-MM-dd";
@@ -35,33 +37,70 @@ export const ImportCard = ({
     const onTableHeadSelectChange = (
         columnIndex: number,
         value: string | null
-    ) => {
+      ) => {
         setSelectedColumns((prev) => {
-            const newSelectedColumns = {...prev};
-
-            for (const key in newSelectedColumns) {
-                if (newSelectedColumns[key] === value) {
-                    newSelectedColumns[key] = null;
-                }
+          const newSelectedColumns = {...prev};
+    
+          for (const key in newSelectedColumns) {
+            if (newSelectedColumns[key] === value) {
+              newSelectedColumns[key] = null;
             }
-
-            if (value === 'skip') {
-                value === null;
-            }
-
-            newSelectedColumns[`column_${columnIndex}`] = value;
-
-            return newSelectedColumns;
-        })
-    }
-
-    const progress = Object.values(selectedColumns).filter(Boolean).length; // filter user's selected columns for required selections
-
-    const handleContinue = () => {
+          }
+    
+          if (value === "skip") {
+            value = null;
+          }
+    
+          newSelectedColumns[`column_${columnIndex}`] = value;
+          return newSelectedColumns;
+        });
+      };
+    
+      const progress = Object.values(selectedColumns).filter(Boolean).length; // filter user's selected columns for required selections
+    
+      const handleContinue = () => {
         const getColumnIndex = (column: string) => {
-            column.split("_")[1]; // same as `column_${columnIndex}`
-        }
-    }
+          return column.split("_")[1];
+        };
+
+        // map data to transform body fields with matching headers selected -> [payee, amount, etc] to store data correctly in db
+        const mappedData = {
+          headers: headers.map((_header, index) => {
+            const columnIndex = getColumnIndex(`column_${index}`);
+            return selectedColumns[`column_${columnIndex}`] || null;
+          }),
+          body: body.map((row) => {
+            const transformedRow = row.map((cell, index) => {
+              const columnIndex = getColumnIndex(`column_${index}`);
+              return selectedColumns[`column_${columnIndex}`] ? cell : null;
+            });
+    
+            return transformedRow.every((item) => item === null) 
+              ? []
+              : transformedRow;
+          }).filter((row) => row.length > 0),
+        };
+    
+        const arrayOfData = mappedData.body.map((row) => {
+          return row.reduce((acc: any, cell, index) => {
+            const header = mappedData.headers[index];
+            if (header !== null) {
+              acc[header] = cell;
+            }
+            
+            return acc;
+          }, {});
+        });
+
+        //format the data from arrayOfData for db
+        const formattedData = arrayOfData.map((item) => ({
+            ...item,
+            amount: convertAmountToMiliunits(parseFloat(item.amount)),
+            date: format(parse(item.date, dateFormat, new Date()), outputFormat)
+        }));
+
+        onSubmit(formattedData);
+      };
 
     return (
         <div className="max-w-screen-4xl mx-auto w-full pb-10">
@@ -82,7 +121,7 @@ export const ImportCard = ({
                             size='sm'
                             disabled={progress < requiredOptions.length}
                             className="w-full lg:auto"
-                            onClick={() => {}}
+                            onClick={handleContinue}
                         >
                             Continue ({progress} / {requiredOptions.length})
                         </Button>
