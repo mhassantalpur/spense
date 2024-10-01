@@ -28,8 +28,9 @@ export function calculatePercentageChange(current: number, previous: number) {
   if (previous === 0) {
     return previous === current ? 0 : 100;
   }
+
   return ((current - previous) / previous) * 100;
-}
+};
 
 export function fillMissingDays(
   activeDays: {
@@ -71,7 +72,7 @@ type Period = {
   to : string | Date | undefined;
 }
 
-export function formatDateRange(period?: Period) {
+export function formatDateRange (period?: Period) {
   const defaultTo = new Date();
   const defaultFrom = subDays(defaultTo, 30);
 
@@ -83,5 +84,22 @@ export function formatDateRange(period?: Period) {
     return `${format(period.from, "LLL dd")} - ${format(period.to, "LLL dd, y")}`;
   }
 
-  return format(period.from, "LLL dd, y")
-}
+  return format(period.from, "LLL dd, y");
+};
+
+export function formatPercentage(
+  value: number,
+  options: { addPrefix?: boolean } = {
+    addPrefix: false,
+  },
+) {
+  const result = new Intl.NumberFormat("en-US", {
+    style: "percent",
+  }).format(value / 100);
+
+  if (options.addPrefix && value > 0) {
+    return `+${result}`;
+  }
+
+  return result;
+};
