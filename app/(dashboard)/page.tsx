@@ -1,10 +1,9 @@
+import { DataGrid } from "@/components/data-grid";
 
-"use client"
-
-export default function Home() {
+export default function DashboardPage() {
   return (
-    <div className="text-black">
-      Overview
+    <div className="text-black max-w-screen-4xl mx-auto w-full pb-10">
+      <DataGrid />
     </div>
   )
 }
