@@ -44,7 +44,7 @@ const SelectScrollUpButton = React.forwardRef<
     )}
     {...props}
   >
-    <ChevronUp className="h-4 w-4" />
+    <ChevronUp className="h-4 w-4 ml-2" />
   </SelectPrimitive.ScrollUpButton>
 ))
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName

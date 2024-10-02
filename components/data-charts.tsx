@@ -19,7 +19,6 @@ export const DataCharts = () => {
       <div className="col-span-1 lg:col-span-3 xl:col-span-4">
         <Chart data={data?.days} />
       </div>
-      data-charts
     </div>
   )
 }
