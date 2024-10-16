@@ -12,7 +12,7 @@ const SignInPage = () => {
             Welcome Back
           </h1>
           <p className='text-base text-[#7e8ca0]'>
-            Log in to resume your finacne journey
+            Log in to resume your finance journey
           </p>
         </div>
         <div className='flex items-center justify-center mt-8'>
