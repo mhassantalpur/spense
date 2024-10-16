@@ -39,6 +39,7 @@ export const DateFilter = () => {
     const query = {
       from: format(dateRange?.from || defaultFrom, "yyy-MM-dd"),
       to: format(dateRange?.to || defaultTo, "yyy-MM-dd"),
+      accountId
     }
     const url = qs.stringifyUrl({
       url: pathname,
@@ -47,7 +48,12 @@ export const DateFilter = () => {
 
     router.push(url);
   }
- 
+
+  const onReset = () => {
+    setDate(undefined)
+    pushToUrl(undefined)
+  }
+
   return (
     <Popover>
       <PopoverTrigger>
@@ -58,8 +64,42 @@ export const DateFilter = () => {
           className="lg:w-auto w-full h-9 rounded-md px-3 font-normal bg-white/10 hover:bg-white/20 hover:text-white border-none focus:ring-offset-0 focus:ring-transparent outline-none text-white focus:bg-white/30 transition"
         >
           <span>{formatDateRange(paramState)}</span>
+          <ChevronDown className="ml-2 size-4 opacity-50" />
         </Button>
       </PopoverTrigger>
+      <PopoverContent className="lg:w-auto w-full p-0" align="start">
+        <Calendar
+          disabled={false}
+          initialFocus
+          mode="range"
+          defaultMonth={date?.from}
+          selected={date}
+          onSelect={setDate}
+          numberOfMonths={2} 
+        />
+        <div className="p-4 w-full flex items-center gap-x-2">
+          <PopoverClose asChild>
+            <Button
+              onClick={onReset}
+              disabled={!date?.from || !date?.to}
+              className="w-full"
+              variant="outline"
+            >
+              Reset
+            </Button>
+          </PopoverClose>
+          <PopoverClose asChild>
+            <Button
+              onClick={() => pushToUrl(date)}
+              disabled={!date?.from || !date?.to}
+              className="w-full"
+              variant="outline"
+            >
+              Apply
+            </Button>
+          </PopoverClose>
+        </div>
+      </PopoverContent>
     </Popover>
   )
 }
