@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -8,6 +7,7 @@ import {
   CardHeader
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { PlaidConnect } from "@/features/plaid/components/plaid-connect"
 import { cn } from "@/lib/utils"
 
 export const SettingsCard = () => {
@@ -35,9 +35,7 @@ export const SettingsCard = () => {
                 : "No bank account connected"
                }
             </div>
-            <Button size="sm" >
-              Connect
-            </Button>
+            <PlaidConnect />
           </div>
         </div>
       </CardContent>
