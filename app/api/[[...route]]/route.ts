@@ -23,7 +23,7 @@ const routes = app
     .route("/plaid", plaid)
     .route("/accounts", accounts)
     .route("/categories", categories)
-    .route("transactions", transactions)
+    .route("/transactions", transactions)
     .route("/summary", summary);
 
 export const GET = handle(app) 
