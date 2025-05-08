@@ -8,7 +8,7 @@ import { HTTPException } from 'hono/http-exception'
 import plaid from "./plaid";
 
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 
 const app = new Hono().basePath('/api') // init new hono app with base path to be api
 

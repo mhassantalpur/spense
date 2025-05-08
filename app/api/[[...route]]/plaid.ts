@@ -34,7 +34,7 @@ const app = new Hono()
       language: "en"
     });
 
-    return c.json({ data: token.data })
+    return c.json({ data: token.data.link_token }, 200)
   }
  )
 
