@@ -6,7 +6,7 @@ import { client } from "@/lib/hono";
 
 type ResponseType = InferResponseType<typeof client.api.plaid["create-link-token"]["$post"]>;
 
-export const useCreateCategory = () => {
+export const useCreateLinkToken = () => {
     const mutation = useMutation<
         ResponseType,
         Error

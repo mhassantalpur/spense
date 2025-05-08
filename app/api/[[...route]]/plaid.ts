@@ -5,7 +5,7 @@ const app = new Hono()
  .post("/create-link-token",
   clerkMiddleware(),
   async (c) => {
-    return c.json({ plaid: true })
+    return c.json({ data: "token-exists" })
   }
  )
 

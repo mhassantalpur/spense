@@ -1,4 +1,4 @@
-import { SettingsCard } from "./SettingsCard";
+import { SettingsCard } from "./settings-card";
 
 const SettingsPage = () => {
   return (
