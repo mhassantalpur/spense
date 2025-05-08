@@ -5,6 +5,7 @@ import categories from "./categories"
 import transactions from "./transactions"
 import summary from "./summary"
 import { HTTPException } from 'hono/http-exception'
+import plaid from "./plaid";
 
 
 export const runtime = 'edge'
@@ -19,6 +20,7 @@ app.onError((err, c) => {
 })
 
 const routes = app
+    .route("/plaid", plaid)
     .route("/accounts", accounts)
     .route("/categories", categories)
     .route("transactions", transactions)
